@@ -1,0 +1,279 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #f4efe3;
+  --color-cream: #faf7ee;
+  --color-card: #fdfbf5;
+  --color-ink: #262319;
+  --color-ink-soft: #5f5a49;
+  --color-ink-faint: #8b8571;
+  --color-olive: #48523a;
+  --color-olive-deep: #333d28;
+  --color-olive-night: #232b1a;
+  --color-olive-soft: #78825f;
+  --color-olive-mist: #e6e5d2;
+  --color-brass: #a98a4f;
+  --color-brass-soft: #cbb387;
+  --color-brass-pale: #e9dcc0;
+  --color-line: #ddd6c2;
+  --color-ok: #3e7b4f;
+  --color-warn: #a9781f;
+  --color-danger: #a63d2c;
+  --color-info: #38647f;
+
+  --font-display: "Cormorant", "Georgia", serif;
+  --font-sans: "Manrope", "Segoe UI", system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 92px;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── film grain over the whole page ─────────────────────────── */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::selection {
+  background: var(--color-olive);
+  color: var(--color-cream);
+}
+
+/* ── scrollbar in the clinic's palette ──────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-olive-soft) var(--color-paper);
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-track {
+  background: var(--color-paper);
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--color-olive-soft);
+  border-radius: 8px;
+  border: 2px solid var(--color-paper);
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brass);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brass);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@layer components {
+  /* ── typography helpers ─────────────────────────────────────── */
+  .font-display {
+    font-family: var(--font-display);
+  }
+  .label-caps {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  /* ── signature arch photo frame with offset brass outline ───── */
+  .arch {
+    border-radius: 12rem 12rem 1.25rem 1.25rem;
+  }
+  .frame-brass {
+    position: relative;
+  }
+  .frame-brass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--color-brass-soft);
+    border-radius: inherit;
+    transform: translate(14px, 14px);
+    pointer-events: none;
+  }
+
+  /* ── scroll reveal ──────────────────────────────────────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    transition:
+      opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+  .reveal.is-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ── motion ─────────────────────────────────────────────────── */
+  @keyframes kenburns {
+    from {
+      transform: scale(1.02);
+    }
+    to {
+      transform: scale(1.1);
+    }
+  }
+  .kenburns {
+    animation: kenburns 22s ease-in-out infinite alternate;
+  }
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  .marquee-track {
+    animation: marquee 36s linear infinite;
+  }
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes floaty {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(-10px);
+    }
+  }
+  .floaty {
+    animation: floaty 4.5s ease-in-out infinite alternate;
+  }
+
+  @keyframes pulse-ring {
+    0% {
+      box-shadow: 0 0 0 0 rgba(203, 179, 135, 0.55);
+    }
+    100% {
+      box-shadow: 0 0 0 14px rgba(203, 179, 135, 0);
+    }
+  }
+  .pulse-ring {
+    animation: pulse-ring 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .fade-in {
+    animation: fade-in 0.35s ease-out both;
+  }
+
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(22px) scale(0.985);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .rise-in {
+    animation: rise-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* ── dotted price leaders ───────────────────────────────────── */
+  .leader {
+    flex: 1 1 auto;
+    min-width: 2rem;
+    border-bottom: 1.5px dotted var(--color-line);
+    transform: translateY(-0.35em);
+  }
+
+  /* ── form fields ────────────────────────────────────────────── */
+  .field {
+    width: 100%;
+    background: var(--color-card);
+    border: 1px solid var(--color-line);
+    border-radius: 0.75rem;
+    padding: 0.8rem 1rem;
+    font-size: 0.9375rem;
+    color: var(--color-ink);
+    transition:
+      border-color 0.25s,
+      box-shadow 0.25s;
+  }
+  .field::placeholder {
+    color: var(--color-ink-faint);
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--color-olive-soft);
+    box-shadow: 0 0 0 3px rgba(120, 130, 95, 0.18);
+  }
+  .field-error {
+    border-color: var(--color-danger);
+  }
+  select.field {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235f5a49' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    padding-right: 2.6rem;
+  }
+
+  /* ── legal doc body ─────────────────────────────────────────── */
+  .doc-body h4 {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--color-olive-deep);
+    margin: 1.5rem 0 0.5rem;
+  }
+  .doc-body p {
+    font-size: 0.9rem;
+    line-height: 1.75;
+    color: var(--color-ink-soft);
+    margin-bottom: 0.75rem;
+  }
+  .doc-body a {
+    color: var(--color-info);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .kenburns,
+  .marquee-track,
+  .floaty,
+  .pulse-ring {
+    animation: none;
+  }
+}
